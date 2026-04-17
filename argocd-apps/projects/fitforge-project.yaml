@@ -1,4 +1,4 @@
-﻿# =============================================================================
+# =============================================================================
 # ArgoCD AppProject: fitforge
 # =============================================================================
 # Scopes what repos, namespaces, and cluster resources ArgoCD can manage
@@ -20,7 +20,7 @@ spec:
     # Bitnami / Prometheus community charts (for infra apps)
     - https://charts.bitnami.com/bitnami
     - https://prometheus-community.github.io/helm-charts
-    - https://helm.sealed-secrets.github.io/helm-charts
+    - https://bitnami-labs.github.io/sealed-secrets
     - https://charts.helm.sh/stable
 
   # Allowed destination clusters and namespaces
