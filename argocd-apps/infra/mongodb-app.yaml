@@ -1,0 +1,40 @@
+﻿# =============================================================================
+# ArgoCD Application: MongoDB (Bitnami)
+# =============================================================================
+# Manual sync — database changes require explicit approval.
+# Prerequisite: sealed-secrets controller must be running.
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mongodb
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: infrastructure
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: fitforge
+  source:
+    repoURL: https://github.com/fitforge101/fitforge-charts.git
+    targetRevision: main
+    path: infrastructure/mongodb
+    helm:
+      releaseName: mongodb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fitforge-dev
+  # ── MANUAL SYNC ─────────────────────────────────────────────────────────────
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 2
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
+  revisionHistoryLimit: 3

@@ -1,0 +1,28 @@
+﻿{{- if .Values.networkPolicy.enabled }}
+# =============================================================================
+# NetworkPolicy: ai-agent-service
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ai-agent-service-network-policy
+  namespace: fitforge-dev
+  labels:
+    app: ai-agent-service
+    app.kubernetes.io/part-of: fitforge
+spec:
+  podSelector:
+    matchLabels:
+      app: ai-agent-service
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from Envoy Gateway pods
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+      ports:
+        - port: 5006
+          protocol: TCP
+{{- end }}

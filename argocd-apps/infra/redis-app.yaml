@@ -1,0 +1,43 @@
+﻿# =============================================================================
+# ArgoCD Application: Redis
+# =============================================================================
+# Manual sync — cache layer changes require careful review.
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: infrastructure
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: fitforge
+  source:
+    repoURL: https://github.com/fitforge101/fitforge-charts.git
+    targetRevision: main
+    path: infrastructure/redis
+    helm:
+      releaseName: redisdb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fitforge-dev
+  # ── MANUAL SYNC ─────────────────────────────────────────────────────────────
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 2
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
+  revisionHistoryLimit: 3
+  ignoreDifferences:
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+      jsonPointers:
+        - /spec/metrics

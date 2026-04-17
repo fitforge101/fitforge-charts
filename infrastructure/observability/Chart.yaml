@@ -1,0 +1,11 @@
+apiVersion: v2
+name: observability
+description: Prometheus + Grafana stack for FitForge — kube-prometheus-stack
+type: application
+version: 1.0.0
+appVersion: "latest"
+
+dependencies:
+  - name: kube-prometheus-stack
+    version: ">=55.0.0"
+    repository: https://prometheus-community.github.io/helm-charts

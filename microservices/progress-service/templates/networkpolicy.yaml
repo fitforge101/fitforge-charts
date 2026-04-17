@@ -1,0 +1,28 @@
+﻿{{- if .Values.networkPolicy.enabled }}
+# =============================================================================
+# NetworkPolicy: progress-service
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: progress-service-network-policy
+  namespace: fitforge-dev
+  labels:
+    app: progress-service
+    app.kubernetes.io/part-of: fitforge
+spec:
+  podSelector:
+    matchLabels:
+      app: progress-service
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from Envoy Gateway pods
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+      ports:
+        - port: 5005
+          protocol: TCP
+{{- end }}

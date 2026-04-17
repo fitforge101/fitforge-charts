@@ -1,0 +1,40 @@
+﻿{{- if .Values.networkPolicy.enabled }}
+# =============================================================================
+# NetworkPolicy: auth-service
+# =============================================================================
+# Deny all ingress by default.
+# Allow ingress only from: Envoy Gateway (ingress controller).
+# Auth service does not need to receive traffic from peer microservices directly.
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: auth-service-network-policy
+  namespace: fitforge-dev
+  labels:
+    app: auth-service
+    app.kubernetes.io/part-of: fitforge
+spec:
+  podSelector:
+    matchLabels:
+      app: auth-service
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from Envoy Gateway pods
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+      ports:
+        - port: 5001
+          protocol: TCP
+    # Allow from ai-agent-service (calls auth to validate tokens)
+    - from:
+        - podSelector:
+            matchLabels:
+              app: ai-agent-service
+      ports:
+        - port: 5001
+          protocol: TCP
+{{- end }}

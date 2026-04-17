@@ -1,0 +1,28 @@
+﻿{{- if .Values.networkPolicy.enabled }}
+# =============================================================================
+# NetworkPolicy: workout-service
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: workout-service-network-policy
+  namespace: fitforge-dev
+  labels:
+    app: workout-service
+    app.kubernetes.io/part-of: fitforge
+spec:
+  podSelector:
+    matchLabels:
+      app: workout-service
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from Envoy Gateway pods
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+      ports:
+        - port: 5003
+          protocol: TCP
+{{- end }}

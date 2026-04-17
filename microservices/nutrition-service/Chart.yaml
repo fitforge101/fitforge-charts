@@ -1,0 +1,6 @@
+apiVersion: v2
+name: nutrition-service
+description: FitForge Nutrition Tracking Service
+type: application
+version: 1.0.0
+appVersion: "v3"
