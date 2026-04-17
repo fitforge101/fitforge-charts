@@ -4,7 +4,7 @@ image:
   repository: fitforge360/nutrition-service
   pullPolicy: Always
   # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "dev-7db3a48a4a5f2a4bea01a17bbe2203ed2967c725"
+  tag: "dev-bfac37635d6e811fc055ba25c0c8ecc1587dc58f"
 resources:
   requests:
     cpu: "50m"
