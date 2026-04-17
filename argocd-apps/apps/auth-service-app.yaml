@@ -1,4 +1,4 @@
-﻿apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: auth-service
@@ -13,7 +13,7 @@ spec:
   project: fitforge
   source:
     repoURL: https://github.com/fitforge101/fitforge-charts.git
-    targetRevision: main
+    targetRevision: develop
     path: microservices/auth-service
     helm:
       releaseName: auth-service

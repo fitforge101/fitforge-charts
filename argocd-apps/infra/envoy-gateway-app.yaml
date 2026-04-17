@@ -17,7 +17,7 @@ spec:
   project: fitforge
   source:
     repoURL: https://github.com/fitforge101/fitforge-charts.git
-    targetRevision: main
+    targetRevision: develop
     path: infrastructure/envoy-gateway
     helm:
       releaseName: envoy-gateway-routes

@@ -1,4 +1,4 @@
-﻿# =============================================================================
+# =============================================================================
 # ArgoCD Application: Redis
 # =============================================================================
 # Manual sync — cache layer changes require careful review.
@@ -17,7 +17,7 @@ spec:
   project: fitforge
   source:
     repoURL: https://github.com/fitforge101/fitforge-charts.git
-    targetRevision: main
+    targetRevision: develop
     path: infrastructure/redis
     helm:
       releaseName: redisdb
