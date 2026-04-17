@@ -1,0 +1,81 @@
+# =============================================================================
+# Bitnami MongoDB Helm Chart — values.yaml
+# =============================================================================
+# Chart:   bitnami/mongodb
+# Docs:    https://artifacthub.io/packages/helm/bitnami/mongodb
+# Purpose: Deploy a 3-node MongoDB ReplicaSet for the FitForge platform
+# =============================================================================
+
+# ── Architecture ─────────────────────────────────────────────────────────────
+architecture: replicaset
+replicaCount: 3
+
+# ── Authentication ───────────────────────────────────────────────────────────
+# All credentials are sourced from the SealedSecret → mongodb-secret
+auth:
+  enabled: true
+  existingSecret: mongodb-secret
+  usernames:
+    - auth_user
+    - user_user
+    - workout_user
+    - nutrition_user
+    - progress_user
+  databases:
+    - auth_db
+    - user_db
+    - workout_db
+    - nutrition_db
+    - progress_db
+
+# ── Replica Set Name ─────────────────────────────────────────────────────────
+replicaSetName: rs0
+
+# ── Persistence ──────────────────────────────────────────────────────────────
+persistence:
+  enabled: true
+  storageClass: mongo-nfs-storage
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+
+# ── Resources (Guaranteed QoS) ───────────────────────────────────────────────
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+# ── Arbiter ──────────────────────────────────────────────────────────────────
+arbiter:
+  enabled: false
+
+# ── Metrics / MongoDB Exporter ───────────────────────────────────────────────
+metrics:
+  enabled: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  service:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9216"
+      prometheus.io/path: "/metrics"
+  serviceMonitor:
+    enabled: false
+
+# ── Pod Labels & Annotations ─────────────────────────────────────────────────
+podLabels:
+  app.kubernetes.io/part-of: fitforge
+  app.kubernetes.io/component: database
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "9216"
+  prometheus.io/path: "/metrics"

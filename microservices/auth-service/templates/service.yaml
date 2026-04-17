@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: fit-forge
+  labels:
+    app: auth-service
+    app.kubernetes.io/name: auth-service
+    app.kubernetes.io/part-of: fitforge
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: auth-service
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP

@@ -1,0 +1,45 @@
+# =============================================================================
+# kube-prometheus-stack values — FitForge Observability
+# =============================================================================
+# Chart:  prometheus-community/kube-prometheus-stack
+# Deploy: helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
+#           -n monitoring --create-namespace \
+#           -f infrastructure/observability/values.yaml
+# =============================================================================
+
+# Disabled — no complex email alerting needed yet
+alertmanager:
+  enabled: false
+
+# Critical — tracks CPU/Memory on all nodes
+nodeExporter:
+  enabled: true
+
+# Critical — tracks Pod CrashLoops, pending statuses
+kubeStateMetrics:
+  enabled: true
+
+grafana:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  defaultDashboardsTimezone: browser
+
+prometheus:
+  prometheusSpec:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+    retention: 2h
+    # Discover ServiceMonitors/PodMonitors from all namespaces
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false

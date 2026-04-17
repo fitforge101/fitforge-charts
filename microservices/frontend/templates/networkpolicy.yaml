@@ -1,0 +1,31 @@
+{{- if .Values.networkPolicy.enabled }}
+# =============================================================================
+# NetworkPolicy: frontend
+# =============================================================================
+# Frontend accepts traffic from anyone via the Gateway (internet-facing).
+# No restrictions needed on ingress for frontend itself — the Gateway handles it.
+# =============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-network-policy
+  namespace: fit-forge
+  labels:
+    app: frontend
+    app.kubernetes.io/part-of: fitforge
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from Envoy Gateway pods only
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+      ports:
+        - port: 3000
+          protocol: TCP
+{{- end }}

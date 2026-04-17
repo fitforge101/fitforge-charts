@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: progress-service
+  namespace: fit-forge
+  labels:
+    app: progress-service
+    app.kubernetes.io/name: progress-service
+    app.kubernetes.io/part-of: fitforge
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: progress-service
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP

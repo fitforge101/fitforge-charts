@@ -1,0 +1,31 @@
+# user-service values
+replicaCount: 1
+
+image:
+  repository: aswin018/k8s_mern_app_user-service
+  pullPolicy: Always
+  # ── Update this tag in CI after a successful build & push ─────────────────
+  tag: "v3"
+
+resources:
+  requests:
+    cpu: "50m"
+    memory: "128Mi"
+  limits:
+    cpu: "250m"
+    memory: "256Mi"
+
+service:
+  type: ClusterIP
+  port: 5002
+  targetPort: 5002
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 75
+
+networkPolicy:
+  enabled: true

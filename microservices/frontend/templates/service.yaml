@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: fit-forge
+  labels:
+    app: frontend
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/part-of: fitforge
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: frontend
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: workout-service
+description: FitForge Workout Tracking Service
+type: application
+version: 1.0.0
+appVersion: "v3"

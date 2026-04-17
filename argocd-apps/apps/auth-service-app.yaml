@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: auth-service
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: microservice
+  # Prune resources when removed from git
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: fitforge
+  source:
+    repoURL: https://github.com/fitforge101/fitforge-charts.git
+    targetRevision: main
+    path: microservices/auth-service
+    helm:
+      releaseName: auth-service
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fit-forge
+  syncPolicy:
+    automated:
+      prune: true      # Delete resources removed from git
+      selfHeal: true   # Revert manual changes in cluster
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 3
+  # Ignore HPA annotation diffs that ArgoCD reports as drifted
+  ignoreDifferences:
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+      jsonPointers:
+        - /spec/metrics

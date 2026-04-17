@@ -1,0 +1,56 @@
+# =============================================================================
+# ArgoCD Application: Prometheus + Grafana (kube-prometheus-stack)
+# =============================================================================
+# Manual sync — observability stack changes require approval.
+# Deployed to dedicated "monitoring" namespace.
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: infrastructure
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: fitforge
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: ">=55.0.0"
+    helm:
+      releaseName: prometheus
+      valueFiles:
+        # Reference values from the git repo using a second source (ArgoCD 2.6+)
+        # If you're on older ArgoCD, install manually:
+        # helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
+        #   -n monitoring --create-namespace \
+        #   -f infrastructure/observability/values.yaml
+        - $values/infrastructure/observability/values.yaml
+  sources:
+    - repoURL: https://github.com/fitforge101/fitforge-charts.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: ">=55.0.0"
+      helm:
+        releaseName: prometheus
+        valueFiles:
+          - $values/infrastructure/observability/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 2
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
+  revisionHistoryLimit: 3

@@ -1,0 +1,52 @@
+# =============================================================================
+# ArgoCD AppProject: fitforge
+# =============================================================================
+# Scopes what repos, namespaces, and cluster resources ArgoCD can manage
+# under the "fitforge" project. Acts as a security boundary.
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: fitforge
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: fitforge
+spec:
+  description: FitForge Platform — microservices + infrastructure
+
+  # Only allow deployments from this specific repo
+  sourceRepos:
+    - https://github.com/fitforge101/fitforge-charts.git
+    # Bitnami / Prometheus community charts (for infra apps)
+    - https://charts.bitnami.com/bitnami
+    - https://prometheus-community.github.io/helm-charts
+    - https://helm.sealed-secrets.github.io/helm-charts
+    - https://charts.helm.sh/stable
+
+  # Allowed destination clusters and namespaces
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: fit-forge
+    - server: https://kubernetes.default.svc
+      namespace: monitoring
+    - server: https://kubernetes.default.svc
+      namespace: kube-system
+    - server: https://kubernetes.default.svc
+      namespace: envoy-gateway-system
+
+  # Cluster-scoped resources this project can manage
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: gateway.networking.k8s.io
+      kind: GatewayClass
+
+  # Namespace-scoped resources
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  # Orphaned resource monitoring — warn if resources exist in namespace
+  # that are not tracked by ArgoCD
+  orphanedResources:
+    warn: true

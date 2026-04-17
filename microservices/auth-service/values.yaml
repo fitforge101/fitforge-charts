@@ -1,0 +1,32 @@
+# auth-service values
+replicaCount: 1
+
+image:
+  repository: aswin018/k8s_mern_app_auth-service
+  pullPolicy: Always
+  # ── To update image tag, change only this line and commit ──────────────────
+  # Your CI pipeline (GitHub Actions) should auto-bump this after a build.
+  tag: "v3"
+
+resources:
+  requests:
+    cpu: "50m"
+    memory: "128Mi"
+  limits:
+    cpu: "250m"
+    memory: "256Mi"
+
+service:
+  type: ClusterIP
+  port: 5001
+  targetPort: 5001
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 75
+
+networkPolicy:
+  enabled: true
