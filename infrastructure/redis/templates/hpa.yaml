@@ -3,7 +3,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: redisdb-redis
-  namespace: fit-forge
+  namespace: fitforge-dev
   labels:
     app: redisdb-redis
     app.kubernetes.io/name: redis

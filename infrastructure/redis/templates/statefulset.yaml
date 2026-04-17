@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redisdb-redis
-  namespace: fit-forge
+  namespace: fitforge-dev
   labels:
     app: redisdb-redis
     app.kubernetes.io/name: redis
