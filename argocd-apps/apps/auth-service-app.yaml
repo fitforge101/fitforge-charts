@@ -6,6 +6,8 @@ metadata:
   labels:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: microservice
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   # Prune resources when removed from git
   finalizers:
     - resources-finalizer.argocd.argoproj.io

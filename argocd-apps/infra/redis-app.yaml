@@ -11,6 +11,8 @@ metadata:
   labels:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: infrastructure
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
