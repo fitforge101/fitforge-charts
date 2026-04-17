@@ -1,12 +1,10 @@
 # user-service values
 replicaCount: 1
-
 image:
   repository: fitforge360/user-service
   pullPolicy: Always
   # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "user-service-v0.0.2"
-
+  tag: "dev-bda61e51b65325addd6879845a97799c1377e4c0"
 resources:
   requests:
     cpu: "50m"
@@ -14,18 +12,15 @@ resources:
   limits:
     cpu: "250m"
     memory: "256Mi"
-
 service:
   type: ClusterIP
   port: 5002
   targetPort: 5002
-
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 75
-
 networkPolicy:
   enabled: true
