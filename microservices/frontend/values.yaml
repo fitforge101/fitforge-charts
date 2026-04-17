@@ -1,12 +1,10 @@
 # frontend values
 replicaCount: 1
-
 image:
   repository: fitforge360/frontend
   pullPolicy: Always
   # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "frontend-v0.1.0"
-
+  tag: "dev-930118f332072c7246e8031d2c9598bd944d35f7"
 resources:
   requests:
     cpu: "50m"
@@ -14,18 +12,15 @@ resources:
   limits:
     cpu: "250m"
     memory: "256Mi"
-
 service:
   type: ClusterIP
   port: 80
   targetPort: 3000
-
 autoscaling:
   enabled: true
   minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 75
-
 networkPolicy:
   enabled: true
