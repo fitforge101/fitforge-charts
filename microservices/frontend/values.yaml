@@ -2,10 +2,10 @@
 replicaCount: 1
 
 image:
-  repository: aswin018/k8s_mern_app_frontend
+  repository: fitforge360/frontend
   pullPolicy: Always
   # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "v3"
+  tag: "frontend-v0.1.0"
 
 resources:
   requests:

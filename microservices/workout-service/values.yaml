@@ -2,10 +2,10 @@
 replicaCount: 1
 
 image:
-  repository: aswin018/k8s_mern_app_workout-service
+  repository: fitforge360/workout-service
   pullPolicy: Always
   # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "v3"
+  tag: "workout-service-v0.0.3"
 
 resources:
   requests:

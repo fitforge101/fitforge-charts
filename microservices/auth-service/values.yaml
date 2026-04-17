@@ -2,11 +2,11 @@
 replicaCount: 1
 
 image:
-  repository: aswin018/k8s_mern_app_auth-service
+  repository: fitforge360/auth-service
   pullPolicy: Always
   # ── To update image tag, change only this line and commit ──────────────────
   # Your CI pipeline (GitHub Actions) should auto-bump this after a build.
-  tag: "v3"
+  tag: "auth-service-v0.0.2"
 
 resources:
   requests:
