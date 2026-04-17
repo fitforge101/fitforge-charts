@@ -1,4 +1,4 @@
-apiVersion: argoproj.io/v1alpha1
+﻿apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ai-agent-service
@@ -18,7 +18,7 @@ spec:
       releaseName: ai-agent-service
   destination:
     server: https://kubernetes.default.svc
-    namespace: fit-forge
+    namespace: fitforge-dev
   syncPolicy:
     automated:
       prune: true

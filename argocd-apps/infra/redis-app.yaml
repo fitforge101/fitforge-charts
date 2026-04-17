@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # ArgoCD Application: Redis
 # =============================================================================
 # Manual sync — cache layer changes require careful review.
@@ -23,7 +23,7 @@ spec:
       releaseName: redisdb
   destination:
     server: https://kubernetes.default.svc
-    namespace: fit-forge
+    namespace: fitforge-dev
   # ── MANUAL SYNC ─────────────────────────────────────────────────────────────
   syncPolicy:
     syncOptions:

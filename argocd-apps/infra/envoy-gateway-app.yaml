@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # ArgoCD Application: Envoy Gateway + HTTPRoutes
 # =============================================================================
 # Manual sync — changes to the gateway affect all traffic routing.
@@ -23,7 +23,7 @@ spec:
       releaseName: envoy-gateway-routes
   destination:
     server: https://kubernetes.default.svc
-    namespace: fit-forge
+    namespace: fitforge-dev
   # ── MANUAL SYNC ─────────────────────────────────────────────────────────────
   syncPolicy:
     syncOptions:

@@ -1,4 +1,4 @@
-{{- if .Values.networkPolicy.enabled }}
+﻿{{- if .Values.networkPolicy.enabled }}
 # =============================================================================
 # NetworkPolicy: progress-service
 # =============================================================================
@@ -6,7 +6,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: progress-service-network-policy
-  namespace: fit-forge
+  namespace: fitforge-dev
   labels:
     app: progress-service
     app.kubernetes.io/part-of: fitforge

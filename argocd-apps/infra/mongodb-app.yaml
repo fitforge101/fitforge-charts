@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # ArgoCD Application: MongoDB (Bitnami)
 # =============================================================================
 # Manual sync — database changes require explicit approval.
@@ -24,7 +24,7 @@ spec:
       releaseName: mongodb
   destination:
     server: https://kubernetes.default.svc
-    namespace: fit-forge
+    namespace: fitforge-dev
   # ── MANUAL SYNC ─────────────────────────────────────────────────────────────
   syncPolicy:
     syncOptions:

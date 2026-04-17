@@ -1,4 +1,4 @@
-{{- if .Values.networkPolicy.enabled }}
+﻿{{- if .Values.networkPolicy.enabled }}
 # =============================================================================
 # NetworkPolicy: auth-service
 # =============================================================================
@@ -10,7 +10,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: auth-service-network-policy
-  namespace: fit-forge
+  namespace: fitforge-dev
   labels:
     app: auth-service
     app.kubernetes.io/part-of: fitforge

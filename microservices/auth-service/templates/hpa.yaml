@@ -1,9 +1,9 @@
-{{- if .Values.autoscaling.enabled }}
+﻿{{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: auth-service
-  namespace: fit-forge
+  namespace: fitforge-dev
   labels:
     app: auth-service
     app.kubernetes.io/part-of: fitforge

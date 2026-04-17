@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # ArgoCD AppProject: fitforge
 # =============================================================================
 # Scopes what repos, namespaces, and cluster resources ArgoCD can manage
@@ -26,7 +26,7 @@ spec:
   # Allowed destination clusters and namespaces
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: fit-forge
+      namespace: fitforge-dev
     - server: https://kubernetes.default.svc
       namespace: monitoring
     - server: https://kubernetes.default.svc

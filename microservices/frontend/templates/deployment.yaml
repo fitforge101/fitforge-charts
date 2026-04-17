@@ -1,8 +1,8 @@
-apiVersion: apps/v1
+﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: fit-forge
+  namespace: fitforge-dev
   labels:
     app: frontend
     app.kubernetes.io/name: frontend

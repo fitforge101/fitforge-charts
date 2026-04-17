@@ -1,4 +1,4 @@
-{{- if .Values.networkPolicy.enabled }}
+﻿{{- if .Values.networkPolicy.enabled }}
 # =============================================================================
 # NetworkPolicy: frontend
 # =============================================================================
@@ -9,7 +9,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: frontend-network-policy
-  namespace: fit-forge
+  namespace: fitforge-dev
   labels:
     app: frontend
     app.kubernetes.io/part-of: fitforge
