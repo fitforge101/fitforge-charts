@@ -1,24 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sealed-secrets
+  name: envoy-gateway-controller
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-3"
+    argocd.argoproj.io/sync-wave: "-2"
 spec:
   project: fitforge
-
   source:
-    repoURL: https://bitnami-labs.github.io/sealed-secrets
-    chart: sealed-secrets
-    targetRevision: "2.18.3"   # ✅ actual latest stable
+    repoURL: oci://docker.io/envoyproxy/gateway-helm
+    chart: gateway-helm
+    targetRevision: "v1.7.2"   # ✅ actual latest stable
     helm:
-      releaseName: sealed-secrets
-
+      releaseName: envoy-gateway
   destination:
     server: https://kubernetes.default.svc
-    namespace: kube-system
-
+    namespace: envoy-gateway-system
   syncPolicy:
     automated:
       prune: true

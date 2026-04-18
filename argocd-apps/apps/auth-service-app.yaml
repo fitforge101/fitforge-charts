@@ -6,6 +6,8 @@ metadata:
   labels:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: microservice
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
   # Prune resources when removed from git
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -35,9 +37,3 @@ spec:
         factor: 2
         maxDuration: 3m
   revisionHistoryLimit: 3
-  # Ignore HPA annotation diffs that ArgoCD reports as drifted
-  ignoreDifferences:
-    - group: autoscaling
-      kind: HorizontalPodAutoscaler
-      jsonPointers:
-        - /spec/metrics

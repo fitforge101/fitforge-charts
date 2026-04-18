@@ -1,8 +1,3 @@
-# =============================================================================
-# ArgoCD Application: Redis
-# =============================================================================
-# Manual sync — cache layer changes require careful review.
-# =============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -11,8 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: infrastructure
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"   # ✅ fine if nothing at -1 depends on redis
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io  # ⚠️ cascade deletes redis on app deletion
 spec:
   project: fitforge
   source:
@@ -24,8 +21,10 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-dev
-  # ── MANUAL SYNC ─────────────────────────────────────────────────────────────
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
@@ -36,8 +35,3 @@ spec:
         factor: 2
         maxDuration: 5m
   revisionHistoryLimit: 3
-  ignoreDifferences:
-    - group: autoscaling
-      kind: HorizontalPodAutoscaler
-      jsonPointers:
-        - /spec/metrics

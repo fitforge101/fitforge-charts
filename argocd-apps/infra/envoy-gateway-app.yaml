@@ -1,9 +1,4 @@
-﻿# =============================================================================
-# ArgoCD Application: Envoy Gateway + HTTPRoutes
-# =============================================================================
-# Manual sync — changes to the gateway affect all traffic routing.
-# =============================================================================
-apiVersion: argoproj.io/v1alpha1
+﻿apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: envoy-gateway
@@ -11,8 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: infrastructure
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"   # ✅ after app workloads
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io   # ⚠️ cascade deletes routes on app deletion
 spec:
   project: fitforge
   source:
@@ -24,7 +21,6 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-dev
-  # ── MANUAL SYNC ─────────────────────────────────────────────────────────────
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

@@ -1,9 +1,3 @@
-# =============================================================================
-# ArgoCD Application: Prometheus + Grafana (kube-prometheus-stack)
-# =============================================================================
-# Manual sync — observability stack changes require approval.
-# Deployed to dedicated "monitoring" namespace.
-# =============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -12,30 +6,19 @@ metadata:
   labels:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: infrastructure
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: fitforge
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: ">=55.0.0"
-    helm:
-      releaseName: prometheus
-      valueFiles:
-        # Reference values from the git repo using a second source (ArgoCD 2.6+)
-        # If you're on older ArgoCD, install manually:
-        # helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
-        #   -n monitoring --create-namespace \
-        #   -f infrastructure/observability/values.yaml
-        - $values/infrastructure/observability/values.yaml
   sources:
     - repoURL: https://github.com/fitforge101/fitforge-charts.git
       targetRevision: develop
       ref: values
     - repoURL: https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack
-      targetRevision: ">=55.0.0"
+      targetRevision: "83.6.0"   # ✅ actual latest stable
       helm:
         releaseName: prometheus
         valueFiles:
@@ -44,6 +27,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: monitoring
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
