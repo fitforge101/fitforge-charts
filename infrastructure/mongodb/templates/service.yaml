@@ -1,0 +1,46 @@
+# =============================================================================
+# Service: MongoDB — ClusterIP (application access)
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-mongodb
+  namespace: fitforge-dev
+  labels:
+    app: mongodb-mongodb
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: database
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: mongodb-mongodb
+  ports:
+    - name: mongodb
+      port: {{ .Values.service.port }}
+      targetPort: mongodb
+      protocol: TCP
+---
+# =============================================================================
+# Service: MongoDB — Headless (StatefulSet DNS / stable network identity)
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-mongodb-headless
+  namespace: fitforge-dev
+  labels:
+    app: mongodb-mongodb
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: database
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: mongodb-mongodb
+  ports:
+    - name: mongodb
+      port: {{ .Values.service.port }}
+      targetPort: mongodb
+      protocol: TCP
