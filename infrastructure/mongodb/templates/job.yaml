@@ -1,0 +1,111 @@
+# =============================================================================
+# Job: MongoDB DB-Init
+# =============================================================================
+# Runs once (post-install / post-upgrade) to idempotently create all FitForge
+# service databases and their dedicated users inside the MongoDB StatefulSet.
+#
+# Prerequisites:
+#   • mongodb-mongodb StatefulSet must be Ready (initContainers wait for it)
+#   • mongodb-secret SealedSecret must be decrypted
+# =============================================================================
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-db-init
+  namespace: fitforge-dev
+  labels:
+    app: mongodb-mongodb
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: db-init
+  annotations:
+    # ArgoCD: run on every sync so the job is idempotent-safe
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 4
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        app: mongodb-mongodb
+        app.kubernetes.io/name: mongodb
+        app.kubernetes.io/part-of: fitforge
+        app.kubernetes.io/component: db-init
+    spec:
+      restartPolicy: OnFailure
+
+      # ── Wait for MongoDB to be reachable before running init ──────────────
+      initContainers:
+        - name: wait-for-mongodb
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "[wait] Waiting for MongoDB to accept connections...";
+              until mongosh \
+                --host mongodb-mongodb.fitforge-dev.svc.cluster.local:{{ .Values.service.port }} \
+                --username "$MONGO_ROOT_USERNAME" \
+                --password "$MONGO_ROOT_PASSWORD" \
+                --eval "db.adminCommand('ping')" \
+                --quiet; do
+                echo "[wait] MongoDB not ready yet. Retrying in 5s...";
+                sleep 5;
+              done;
+              echo "[wait] MongoDB is ready.";
+          env:
+            - name: MONGO_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.existingSecret }}
+                  key: {{ .Values.auth.rootUsernameKey }}
+            - name: MONGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.existingSecret }}
+                  key: {{ .Values.auth.rootPasswordKey }}
+
+      # ── Main init container ───────────────────────────────────────────────
+      containers:
+        - name: db-init
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - mongosh
+            - --host
+            - mongodb-mongodb.fitforge-dev.svc.cluster.local:{{ .Values.service.port }}
+            - --username
+            - $(MONGO_ROOT_USERNAME)
+            - --password
+            - $(MONGO_ROOT_PASSWORD)
+            - --authenticationDatabase
+            - admin
+            - /scripts/init.js
+          env:
+            - name: MONGO_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.existingSecret }}
+                  key: {{ .Values.auth.rootUsernameKey }}
+            - name: MONGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.existingSecret }}
+                  key: {{ .Values.auth.rootPasswordKey }}
+            {{- range .Values.dbUsers }}
+            - name: {{ .username | upper }}_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.auth.existingSecret }}
+                  key: {{ .passwordKey }}
+            {{- end }}
+          volumeMounts:
+            - name: init-script
+              mountPath: /scripts
+
+      volumes:
+        - name: init-script
+          configMap:
+            name: mongodb-init-script

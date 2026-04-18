@@ -1,37 +1,20 @@
 # =============================================================================
-# Bitnami MongoDB Helm Chart — values.yaml
-# =============================================================================
-# Chart:   bitnami/mongodb
-# Docs:    https://artifacthub.io/packages/helm/bitnami/mongodb
-# Purpose: Deploy a 3-node MongoDB ReplicaSet for the FitForge platform
+# MongoDB StatefulSet values — FitForge Database Layer
+# Purpose: Single-replica MongoDB for development; no replication needed.
+#          A post-install Job creates all service databases and users.
 # =============================================================================
 
-# ── Architecture ─────────────────────────────────────────────────────────────
-architecture: replicaset
-replicaCount: 3
+image:
+  repository: mongo
+  tag: "7.0"
+  pullPolicy: IfNotPresent
 
-# ── Authentication ───────────────────────────────────────────────────────────
-# All credentials are sourced from the SealedSecret → mongodb-secret
-auth:
-  enabled: true
-  existingSecret: mongodb-secret
-  usernames:
-    - auth_user
-    - user_user
-    - workout_user
-    - nutrition_user
-    - progress_user
-  databases:
-    - auth_db
-    - user_db
-    - workout_db
-    - nutrition_db
-    - progress_db
+# ── Service ──────────────────────────────────────────────────────────────────
+service:
+  type: ClusterIP
+  port: 27017
 
-# ── Replica Set Name ─────────────────────────────────────────────────────────
-replicaSetName: rs0
-
-# ── Persistence ──────────────────────────────────────────────────────────────
+# ── Storage ──────────────────────────────────────────────────────────────────
 persistence:
   enabled: true
   storageClass: mongo-nfs-storage
@@ -39,43 +22,47 @@ persistence:
     - ReadWriteOnce
   size: 5Gi
 
-# ── Resources (Guaranteed QoS) ───────────────────────────────────────────────
+# ── Resources ────────────────────────────────────────────────────────────────
 resources:
   requests:
     cpu: 500m
-    memory: 1Gi
+    memory: 512Mi
   limits:
     cpu: 500m
-    memory: 1Gi
+    memory: 512Mi
 
-# ── Arbiter ──────────────────────────────────────────────────────────────────
-arbiter:
-  enabled: false
+# ── Authentication ───────────────────────────────────────────────────────────
+# All credentials sourced from SealedSecret → mongodb-secret
+auth:
+  existingSecret: mongodb-secret
+  rootUsernameKey: mongodb-root-username
+  rootPasswordKey: mongodb-root-password
 
-# ── Metrics / MongoDB Exporter ───────────────────────────────────────────────
-metrics:
-  enabled: true
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
-  service:
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "9216"
-      prometheus.io/path: "/metrics"
-  serviceMonitor:
-    enabled: false
+# ── Databases & Users Created by the Init Job ─────────────────────────────
+# Each entry maps a user → database (1-to-1).
+# Passwords come from the mongodb-secret SealedSecret.
+dbUsers:
+  - username: auth_user
+    database: auth_db
+    passwordKey: auth-user-password
+  - username: user_user
+    database: user_db
+    passwordKey: user-user-password
+  - username: workout_user
+    database: workout_db
+    passwordKey: workout-user-password
+  - username: nutrition_user
+    database: nutrition_db
+    passwordKey: nutrition-user-password
+  - username: progress_user
+    database: progress_db
+    passwordKey: progress-user-password
 
-# ── Pod Labels & Annotations ─────────────────────────────────────────────────
-podLabels:
-  app.kubernetes.io/part-of: fitforge
-  app.kubernetes.io/component: database
-
-podAnnotations:
-  prometheus.io/scrape: "true"
-  prometheus.io/port: "9216"
-  prometheus.io/path: "/metrics"
+# ── Network Policy ───────────────────────────────────────────────────────────
+networkPolicy:
+  allowedPodLabels:
+    - app: auth-service
+    - app: user-service
+    - app: workout-service
+    - app: nutrition-service
+    - app: progress-service

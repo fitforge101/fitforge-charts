@@ -1,11 +1,6 @@
 apiVersion: v2
 name: mongodb
-description: Bitnami MongoDB ReplicaSet for FitForge — managed by ArgoCD
+description: MongoDB single-replica StatefulSet for FitForge — managed by ArgoCD
 type: application
 version: 1.0.0
 appVersion: "7.0"
-
-dependencies:
-  - name: mongodb
-    version: "16.x.x"
-    repository: https://charts.bitnami.com/bitnami
