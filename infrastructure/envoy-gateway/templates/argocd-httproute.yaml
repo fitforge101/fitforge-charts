@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: argocd-server-route
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: ingress
+spec:
+  parentRefs:
+    - name: fitforge-gateway
+      namespace: fitforge-dev
+  hostnames:
+    - argo.fitforge360.in
+  rules:
+    - backendRefs:
+        - name: argocd-server
+          port: 80

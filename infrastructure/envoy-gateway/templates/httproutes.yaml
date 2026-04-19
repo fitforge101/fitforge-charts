@@ -1,4 +1,4 @@
-﻿apiVersion: gateway.networking.k8s.io/v1
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: fitforge-apis
@@ -9,6 +9,8 @@ metadata:
 spec:
   parentRefs:
     - name: fitforge-gateway
+  hostnames:
+    - fitforge360.in
 
   rules:
     # ── Auth Service ──────────────────────────────────────────────────────────
@@ -127,6 +129,8 @@ metadata:
 spec:
   parentRefs:
     - name: fitforge-gateway
+  hostnames:
+    - fitforge360.in
   rules:
     # ── Frontend (SPA fallback / Root) ────────────────────────────────────────
     - matches:
