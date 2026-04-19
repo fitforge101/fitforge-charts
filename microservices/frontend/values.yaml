@@ -4,7 +4,7 @@ image:
   repository: fitforge360/frontend
   pullPolicy: Always
   # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "dev-3ee58b0d85d80cf9be0e4fa313ec461d5325d4f4"
+  tag: "dev-f314a1d6b566149af6a5525eb06c8adced966203"
 resources:
   requests:
     cpu: "50m"
