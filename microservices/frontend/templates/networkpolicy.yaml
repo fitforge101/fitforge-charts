@@ -1,4 +1,4 @@
-﻿{{- if .Values.networkPolicy.enabled }}
+{{- if .Values.networkPolicy.enabled }}
 # =============================================================================
 # NetworkPolicy: frontend
 # =============================================================================
@@ -22,7 +22,8 @@ spec:
   ingress:
     # Allow from Envoy Gateway pods only
     - from:
-        - podSelector:
+        - namespaceSelector: {}
+          podSelector:
             matchLabels:
               app.kubernetes.io/name: envoy
       ports:

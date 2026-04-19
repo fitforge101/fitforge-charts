@@ -1,4 +1,4 @@
-﻿{{- if .Values.networkPolicy.enabled }}
+{{- if .Values.networkPolicy.enabled }}
 # =============================================================================
 # NetworkPolicy: progress-service
 # =============================================================================
@@ -19,7 +19,8 @@ spec:
   ingress:
     # Allow from Envoy Gateway pods
     - from:
-        - podSelector:
+        - namespaceSelector: {}
+          podSelector:
             matchLabels:
               app.kubernetes.io/name: envoy
       ports:
