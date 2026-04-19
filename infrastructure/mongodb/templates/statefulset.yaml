@@ -1,9 +1,3 @@
-# =============================================================================
-# StatefulSet: MongoDB
-# =============================================================================
-# Single-replica MongoDB instance.  Authentication is enabled; credentials
-# are provided via the mongodb-secret SealedSecret.
-# =============================================================================
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
