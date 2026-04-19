@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: oci://docker.io/envoyproxy/gateway-helm
     chart: gateway-helm
-    targetRevision: "v1.7.2"   # ✅ actual latest stable
+    targetRevision: "v1.7.2"   # actual latest stable
     helm:
       releaseName: envoy-gateway
   destination:

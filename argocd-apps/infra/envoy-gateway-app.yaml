@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: infrastructure
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"   # ✅ after app workloads
+    argocd.argoproj.io/sync-wave: "-1"   # after app workloads
   finalizers:
-    - resources-finalizer.argocd.argoproj.io   # ⚠️ cascade deletes routes on app deletion
+    - resources-finalizer.argocd.argoproj.io   # cascade deletes routes on app deletion
 spec:
   project: fitforge
   source:

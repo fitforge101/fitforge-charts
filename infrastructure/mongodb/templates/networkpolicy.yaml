@@ -1,9 +1,3 @@
-# =============================================================================
-# NetworkPolicy: MongoDB
-# =============================================================================
-# Default: deny all ingress.
-# Allow: only FitForge microservices that legitimately use MongoDB.
-# =============================================================================
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

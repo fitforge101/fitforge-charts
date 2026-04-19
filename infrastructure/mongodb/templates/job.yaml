@@ -46,7 +46,7 @@ spec:
             - |
               echo "[wait] Waiting for MongoDB to accept connections...";
               until mongosh \
-                --host mongodb-mongodb.fitforge-dev.svc.cluster.local:{{ .Values.service.port }} \
+                --host mongodb-mongodb-0.mongodb-mongodb-headless.fitforge-dev.svc.cluster.local:{{ .Values.service.port }} \
                 --username "$MONGO_ROOT_USERNAME" \
                 --password "$MONGO_ROOT_PASSWORD" \
                 --eval "db.adminCommand('ping')" \
@@ -75,7 +75,7 @@ spec:
           command:
             - mongosh
             - --host
-            - mongodb-mongodb.fitforge-dev.svc.cluster.local:{{ .Values.service.port }}
+            - mongodb-mongodb-0.mongodb-mongodb-headless.fitforge-dev.svc.cluster.local:{{ .Values.service.port }}
             - --username
             - $(MONGO_ROOT_USERNAME)
             - --password
