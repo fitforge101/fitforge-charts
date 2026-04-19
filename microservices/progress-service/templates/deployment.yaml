@@ -1,8 +1,8 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: progress-service
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: progress-service
     app.kubernetes.io/name: progress-service
@@ -34,7 +34,7 @@ spec:
             - name: PORT
               value: "{{ .Values.service.port }}"
             - name: REDIS_HOST
-              value: "redisdb-redis.fitforge-dev.svc.cluster.local"
+              value: "redisdb-redis.fitforge-prod.svc.cluster.local"
             - name: REDIS_PORT
               value: "6379"
           envFrom:

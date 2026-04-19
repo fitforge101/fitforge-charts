@@ -9,7 +9,7 @@ metadata:
 spec:
   parentRefs:
     - name: fitforge-gateway
-      namespace: fitforge-dev
+      namespace: fitforge-prod
   hostnames:
     - grafana.fitforge360.in
   rules:

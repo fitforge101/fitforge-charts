@@ -1,9 +1,9 @@
-﻿{{- if .Values.autoscaling.enabled }}
+{{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: frontend
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: frontend
     app.kubernetes.io/part-of: fitforge

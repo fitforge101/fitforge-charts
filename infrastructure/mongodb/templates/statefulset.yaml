@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb-mongodb
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: mongodb-mongodb
     app.kubernetes.io/name: mongodb

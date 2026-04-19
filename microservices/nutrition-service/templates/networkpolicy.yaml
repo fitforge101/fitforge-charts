@@ -6,7 +6,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: nutrition-service-network-policy
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: nutrition-service
     app.kubernetes.io/part-of: fitforge

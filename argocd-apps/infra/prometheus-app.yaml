@@ -14,7 +14,7 @@ spec:
   project: fitforge
   sources:
     - repoURL: https://github.com/fitforge101/fitforge-charts.git
-      targetRevision: develop
+      targetRevision: main
       ref: values
     - repoURL: https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack

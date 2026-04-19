@@ -1,8 +1,8 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-service
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: auth-service
     app.kubernetes.io/name: auth-service

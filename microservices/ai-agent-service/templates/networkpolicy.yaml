@@ -6,7 +6,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: ai-agent-service-network-policy
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: ai-agent-service
     app.kubernetes.io/part-of: fitforge

@@ -1,4 +1,4 @@
-﻿apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: envoy-gateway
@@ -14,13 +14,13 @@ spec:
   project: fitforge
   source:
     repoURL: https://github.com/fitforge101/fitforge-charts.git
-    targetRevision: develop
+    targetRevision: main
     path: infrastructure/envoy-gateway
     helm:
       releaseName: envoy-gateway-routes
   destination:
     server: https://kubernetes.default.svc
-    namespace: fitforge-dev
+    namespace: fitforge-prod
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

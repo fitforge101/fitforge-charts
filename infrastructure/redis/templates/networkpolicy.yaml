@@ -8,7 +8,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: redis-network-policy
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: redisdb-redis
     app.kubernetes.io/part-of: fitforge

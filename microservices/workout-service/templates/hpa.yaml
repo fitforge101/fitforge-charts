@@ -1,9 +1,9 @@
-﻿{{- if .Values.autoscaling.enabled }}
+{{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: workout-service
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: workout-service
     app.kubernetes.io/part-of: fitforge

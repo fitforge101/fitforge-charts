@@ -1,9 +1,9 @@
-﻿{{- if .Values.autoscaling.enabled }}
+{{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: nutrition-service
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: nutrition-service
     app.kubernetes.io/part-of: fitforge

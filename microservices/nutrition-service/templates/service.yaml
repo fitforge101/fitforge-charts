@@ -1,8 +1,8 @@
-﻿apiVersion: v1
+apiVersion: v1
 kind: Service
 metadata:
   name: nutrition-service
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: nutrition-service
     app.kubernetes.io/name: nutrition-service

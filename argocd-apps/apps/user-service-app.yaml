@@ -14,13 +14,13 @@ spec:
   project: fitforge
   source:
     repoURL: https://github.com/fitforge101/fitforge-charts.git
-    targetRevision: develop
+    targetRevision: main
     path: microservices/user-service
     helm:
       releaseName: user-service
   destination:
     server: https://kubernetes.default.svc
-    namespace: fitforge-dev
+    namespace: fitforge-prod
   syncPolicy:
     automated:
       prune: true

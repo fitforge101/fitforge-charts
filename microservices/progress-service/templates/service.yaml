@@ -1,8 +1,8 @@
-﻿apiVersion: v1
+apiVersion: v1
 kind: Service
 metadata:
   name: progress-service
-  namespace: fitforge-dev
+  namespace: fitforge-prod
   labels:
     app: progress-service
     app.kubernetes.io/name: progress-service
