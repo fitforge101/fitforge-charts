@@ -1,12 +1,10 @@
 # nutrition-service values
 replicaCount: 1
-
 image:
   repository: fitforge360/nutrition-service
   pullPolicy: Always
   # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "nutrition-service-v0.0.3"
-
+  tag: "nutrition-service-v0.0.1"
 resources:
   requests:
     cpu: "50m"
@@ -14,18 +12,15 @@ resources:
   limits:
     cpu: "250m"
     memory: "256Mi"
-
 service:
   type: ClusterIP
   port: 5004
   targetPort: 5004
-
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 75
-
 networkPolicy:
   enabled: true
