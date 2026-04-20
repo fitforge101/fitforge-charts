@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: infrastructure
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"   # fine if nothing at -1 depends on redis
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io  # cascade deletes redis on app deletion
+spec:
+  project: fitforge
+  source:
+    repoURL: https://github.com/fitforge101/fitforge-charts.git
+    targetRevision: main
+    path: infrastructure/redis
+    helm:
+      releaseName: redisdb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fitforge-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 2
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
+  revisionHistoryLimit: 3

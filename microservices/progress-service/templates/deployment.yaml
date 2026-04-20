@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: progress-service
+  namespace: fitforge-prod
+  labels:
+    app: progress-service
+    app.kubernetes.io/name: progress-service
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: backend
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: progress-service
+  template:
+    metadata:
+      labels:
+        app: progress-service
+        app.kubernetes.io/name: progress-service
+        app.kubernetes.io/part-of: fitforge
+    spec:
+      containers:
+        - name: progress-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.service.port }}"
+            - name: REDIS_HOST
+              value: "redisdb-redis.fitforge-prod.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+          envFrom:
+            - secretRef:
+                name: progress-service-secret
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

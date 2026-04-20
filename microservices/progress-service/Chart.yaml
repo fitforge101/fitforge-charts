@@ -1,0 +1,6 @@
+apiVersion: v2
+name: progress-service
+description: FitForge Progress Tracking Service
+type: application
+version: 1.0.0
+appVersion: "v3"

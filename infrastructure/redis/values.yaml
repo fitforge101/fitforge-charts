@@ -1,0 +1,41 @@
+# =============================================================================
+# Redis StatefulSet values — FitForge Cache / Session Layer
+# NOTE: Redis is single-threaded by design. HPA is kept from the original
+# setup but be aware that scaling creates independent cache shards (no
+# cross-pod replication). This is acceptable for session token caching.
+# For true HA, migrate to Redis Sentinel or Redis Cluster in the future.
+# =============================================================================
+
+image:
+  repository: redis
+  pullPolicy: IfNotPresent
+  tag: "7.2-alpine"
+
+service:
+  type: ClusterIP
+  port: 6379
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+networkPolicy:
+  # Namespaces/pods allowed to connect to Redis (ingress whitelist)
+  allowedPodLabels:
+    - app: auth-service
+    - app: user-service
+    - app: workout-service
+    - app: nutrition-service
+    - app: progress-service
+    - app: ai-agent-service

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-agent-service
+  namespace: fitforge-prod
+  labels:
+    app: ai-agent-service
+    app.kubernetes.io/name: ai-agent-service
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: backend
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: ai-agent-service
+  template:
+    metadata:
+      labels:
+        app: ai-agent-service
+        app.kubernetes.io/name: ai-agent-service
+        app.kubernetes.io/part-of: fitforge
+    spec:
+      containers:
+        - name: ai-agent-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.service.port }}"
+            - name: AUTH_SERVICE_URL
+              value: "http://auth-service.fitforge-prod.svc.cluster.local:5001"
+          envFrom:
+            - secretRef:
+                name: ai-agent-service-secret
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

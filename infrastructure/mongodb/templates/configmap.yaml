@@ -1,0 +1,48 @@
+# =============================================================================
+# ConfigMap: MongoDB DB-Init Script
+# =============================================================================
+# Holds the JavaScript snippet executed by the mongodb-db-init Job to
+# idempotently create all service databases and their dedicated users.
+# =============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-init-script
+  namespace: fitforge-prod
+  labels:
+    app: mongodb-mongodb
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: db-init
+data:
+  init.js: |
+    // =========================================================================
+    // FitForge — MongoDB database & user bootstrap
+    // Run once via the mongodb-db-init Job after the StatefulSet is ready.
+    // =========================================================================
+
+    const users = [
+      { username: "auth_user",      password: process.env.AUTH_USER_PASSWORD,      db: "auth_db"      },
+      { username: "user_user",      password: process.env.USER_USER_PASSWORD,      db: "user_db"      },
+      { username: "workout_user",   password: process.env.WORKOUT_USER_PASSWORD,   db: "workout_db"   },
+      { username: "nutrition_user", password: process.env.NUTRITION_USER_PASSWORD, db: "nutrition_db" },
+      { username: "progress_user",  password: process.env.PROGRESS_USER_PASSWORD,  db: "progress_db"  },
+    ];
+
+    for (const u of users) {
+      const targetDb = db.getSiblingDB(u.db);
+      const exists = targetDb.getUsers({ filter: { user: u.username } });
+
+      if (exists.users && exists.users.length > 0) {
+        print(`[init] User '${u.username}' already exists in '${u.db}' — skipping.`);
+      } else {
+        targetDb.createUser({
+          user: u.username,
+          pwd:  u.password,
+          roles: [{ role: "readWrite", db: u.db }],
+        });
+        print(`[init] Created user '${u.username}' → database '${u.db}'.`);
+      }
+    }
+
+    print("[init] Bootstrap complete.");

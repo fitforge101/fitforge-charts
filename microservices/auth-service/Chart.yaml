@@ -1,0 +1,6 @@
+apiVersion: v2
+name: auth-service
+description: FitForge Authentication Service — JWT + MongoDB
+type: application
+version: 1.0.0
+appVersion: "v3"

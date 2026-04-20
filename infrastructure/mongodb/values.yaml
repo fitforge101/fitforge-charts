@@ -1,0 +1,68 @@
+# =============================================================================
+# MongoDB StatefulSet values — FitForge Database Layer
+# Purpose: Single-replica MongoDB for development; no replication needed.
+#          A post-install Job creates all service databases and users.
+# =============================================================================
+
+image:
+  repository: mongo
+  tag: "7.0"
+  pullPolicy: IfNotPresent
+
+# ── Service ──────────────────────────────────────────────────────────────────
+service:
+  type: ClusterIP
+  port: 27017
+
+# ── Storage ──────────────────────────────────────────────────────────────────
+persistence:
+  enabled: true
+  storageClass: mongo-nfs-storage
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+
+# ── Resources ────────────────────────────────────────────────────────────────
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# ── Authentication ───────────────────────────────────────────────────────────
+# All credentials sourced from SealedSecret → mongodb-secret
+auth:
+  existingSecret: mongodb-secret
+  rootUsernameKey: mongodb-root-username
+  rootPasswordKey: mongodb-root-password
+
+# ── Databases & Users Created by the Init Job ─────────────────────────────
+# Each entry maps a user → database (1-to-1).
+# Passwords come from the mongodb-secret SealedSecret.
+dbUsers:
+  - username: auth_user
+    database: auth_db
+    passwordKey: auth-user-password
+  - username: user_user
+    database: user_db
+    passwordKey: user-user-password
+  - username: workout_user
+    database: workout_db
+    passwordKey: workout-user-password
+  - username: nutrition_user
+    database: nutrition_db
+    passwordKey: nutrition-user-password
+  - username: progress_user
+    database: progress_db
+    passwordKey: progress-user-password
+
+# ── Network Policy ───────────────────────────────────────────────────────────
+networkPolicy:
+  allowedPodLabels:
+    - app: auth-service
+    - app: user-service
+    - app: workout-service
+    - app: nutrition-service
+    - app: progress-service

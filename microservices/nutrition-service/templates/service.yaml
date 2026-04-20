@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nutrition-service
+  namespace: fitforge-prod
+  labels:
+    app: nutrition-service
+    app.kubernetes.io/name: nutrition-service
+    app.kubernetes.io/part-of: fitforge
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: nutrition-service
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP

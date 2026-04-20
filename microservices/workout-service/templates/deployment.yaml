@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workout-service
+  namespace: fitforge-prod
+  labels:
+    app: workout-service
+    app.kubernetes.io/name: workout-service
+    app.kubernetes.io/part-of: fitforge
+    app.kubernetes.io/component: backend
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: workout-service
+  template:
+    metadata:
+      labels:
+        app: workout-service
+        app.kubernetes.io/name: workout-service
+        app.kubernetes.io/part-of: fitforge
+    spec:
+      containers:
+        - name: workout-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.service.port }}"
+          envFrom:
+            - secretRef:
+                name: workout-service-secret
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

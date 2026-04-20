@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mongodb-network-policy
+  namespace: fitforge-prod
+  labels:
+    app: mongodb-mongodb
+    app.kubernetes.io/part-of: fitforge
+spec:
+  podSelector:
+    matchLabels:
+      app: mongodb-mongodb
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from FitForge backend microservices
+    - from:
+        {{- range .Values.networkPolicy.allowedPodLabels }}
+        - podSelector:
+            matchLabels:
+              {{- range $key, $value := . }}
+              {{ $key }}: {{ $value }}
+              {{- end }}
+        {{- end }}
+        # Allow from the db-init Job
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: db-init
+      ports:
+        - port: 27017
+          protocol: TCP
