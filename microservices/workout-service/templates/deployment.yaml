@@ -1,40 +1,59 @@
-﻿apiVersion: apps/v1
-kind: Deployment
+﻿apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: workout-service
-  namespace: fitforge-dev
+  namespace: {{ .Values.global.namespaces.backend }}
   labels:
     app: workout-service
     app.kubernetes.io/name: workout-service
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: backend
+ 
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.global.replicas.workoutService }}
   {{- end }}
+ 
   selector:
     matchLabels:
       app: workout-service
+ 
   template:
     metadata:
       labels:
         app: workout-service
         app.kubernetes.io/name: workout-service
         app.kubernetes.io/part-of: fitforge
+ 
     spec:
       containers:
         - name: workout-service
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.global.images.workoutService }}
+ 
           ports:
             - name: http
-              containerPort: {{ .Values.service.targetPort }}
-              protocol: TCP
+              containerPort: {{ .Values.global.ports.workoutService }}
+ 
           env:
             - name: PORT
-              value: "{{ .Values.service.port }}"
+              value: "{{ .Values.global.ports.workoutService }}"
+ 
           envFrom:
             - secretRef:
                 name: workout-service-secret
+ 
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            requests:
+              cpu: {{ .Values.global.resources.standard.requests.cpu }}
+              memory: {{ .Values.global.resources.standard.requests.memory }}
+            limits:
+              cpu: {{ .Values.global.resources.standard.limits.cpu }}
+              memory: {{ .Values.global.resources.standard.limits.memory }}
+ 
+  strategy:
+    blueGreen:
+      activeService: workout-service-active
+      previewService: workout-service-preview
+ 
+      autoPromotionEnabled: {{ .Values.global.blueGreen.autoPromotionEnabled }}
+      scaleDownDelaySeconds: {{ .Values.global.blueGreen.scaleDownDelaySeconds }}

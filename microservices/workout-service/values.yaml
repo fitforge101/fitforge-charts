@@ -1,31 +1,44 @@
-# workout-service values
-replicaCount: 1
 
-image:
-  repository: fitforge360/workout-service
-  pullPolicy: Always
-  # ── Update this tag in CI after a successful build & push ─────────────────
-  tag: "workout-service-v0.0.3"
-
-resources:
-  requests:
-    cpu: "50m"
-    memory: "128Mi"
-  limits:
-    cpu: "250m"
-    memory: "256Mi"
-
+global:
+  namespaces:
+    backend: fitforge-dev
+ 
+  images:
+    workoutService: "fitforge360/workout-service:workout-service-v0.0.3"
+ 
+  replicas:
+    workoutService: 1
+ 
+  # ── Blue-Green Rollout config ───────────────────────────────
+  blueGreen:
+    autoPromotionEnabled: false
+    scaleDownDelaySeconds: 30
+ 
+  ports:
+    workoutService: 5003
+    workoutServiceSvc: 5003
+ 
+  resources:
+    standard:
+      requests:
+        cpu: "50m"
+        memory: "128Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"
+ 
+# ── Service config ───────────────────────────────────────────
 service:
   type: ClusterIP
-  port: 5003
-  targetPort: 5003
-
+ 
+# ── Autoscaling ──────────────────────────────────────────────
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 75
-
+ 
+# ── Network Policy ───────────────────────────────────────────
 networkPolicy:
   enabled: true
