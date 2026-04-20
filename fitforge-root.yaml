@@ -11,7 +11,7 @@ spec:
   project: fitforge
   source:
     repoURL: https://github.com/fitforge101/fitforge-charts.git
-    targetRevision: develop
+    targetRevision: main
     path: argocd-apps
     directory:
       recurse: true
