@@ -10,8 +10,6 @@ spec:
   parentRefs:
     - name: fitforge-gateway
       namespace: fitforge-dev
-  hostnames:
-    - argo.fitforge360.in
   rules:
     - backendRefs:
         - name: argocd-server
