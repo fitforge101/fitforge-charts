@@ -1,18 +1,46 @@
-﻿apiVersion: v1
+﻿# ── Active Service (LIVE traffic) ─────────────────────────────
+apiVersion: v1
 kind: Service
 metadata:
-  name: workout-service
-  namespace: fitforge-dev
+  name: workout-service-active
+  namespace: {{ .Values.global.namespaces.backend }}
   labels:
     app: workout-service
     app.kubernetes.io/name: workout-service
     app.kubernetes.io/part-of: fitforge
+ 
 spec:
   type: {{ .Values.service.type }}
+ 
   selector:
     app: workout-service
+ 
   ports:
     - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      port: {{ .Values.global.ports.workoutServiceSvc }}
+      targetPort: {{ .Values.global.ports.workoutService }}
+      protocol: TCP
+ 
+---
+# ── Preview Service (TEST traffic) ───────────────────────────
+apiVersion: v1
+kind: Service
+metadata:
+  name: workout-service-preview
+  namespace: {{ .Values.global.namespaces.backend }}
+  labels:
+    app: workout-service
+    app.kubernetes.io/name: workout-service
+    app.kubernetes.io/part-of: fitforge
+ 
+spec:
+  type: {{ .Values.service.type }}
+ 
+  selector:
+    app: workout-service
+ 
+  ports:
+    - name: http
+      port: {{ .Values.global.ports.workoutServiceSvc }}
+      targetPort: {{ .Values.global.ports.workoutService }}
       protocol: TCP
