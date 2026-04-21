@@ -121,14 +121,10 @@ kind: HTTPRoute
 metadata:
   name: fitforge-frontend
   namespace: fitforge-dev
-  labels:
-    app.kubernetes.io/part-of: fitforge
-    app.kubernetes.io/component: ingress
 spec:
   parentRefs:
     - name: fitforge-gateway
   rules:
-    # ── Frontend (SPA fallback / Root) ────────────────────────────────────────
     - matches:
         - path:
             type: PathPrefix
