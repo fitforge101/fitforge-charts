@@ -127,8 +127,6 @@ metadata:
 spec:
   parentRefs:
     - name: fitforge-gateway
-  hostnames:
-    - fitforge360.in
   rules:
     # ── Frontend (SPA fallback / Root) ────────────────────────────────────────
     - matches:
