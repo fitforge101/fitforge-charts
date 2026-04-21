@@ -8,19 +8,16 @@ spec:
     - name: fitforge-gateway
       namespace: fitforge-dev
   rules:
-  - matches:
-      - path:
-          type: Exact
-          value: /argo
-      - path:
-          type: PathPrefix
-          value: /argo/
-    filters:
-      - type: URLRewrite
-        urlRewrite:
-          path:
-            type: ReplacePrefixMatch
-            replacePrefixMatch: /
-    backendRefs:
-      - name: argocd-server
-        port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /argo
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: argocd-server
+          port: 80
