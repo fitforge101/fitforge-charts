@@ -29,9 +29,11 @@ spec:
         - name: KEYCLOAK_ADMIN_PASSWORD
           value: admin
         - name: KC_HOSTNAME
-          value: 3.109.48.66
+          value: 3-109-48-66.nip.io
         - name: KC_HOSTNAME_STRICT
           value: "false"
+        - name: KC_PROXY
+          value: edge
         - name: KC_HTTP_RELATIVE_PATH
           value: /auth
         ports:
