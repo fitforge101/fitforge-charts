@@ -18,6 +18,8 @@ spec:
     path: microservices/frontend
     helm:
       releaseName: frontend
+      valueFiles:
+        - ../values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-prod

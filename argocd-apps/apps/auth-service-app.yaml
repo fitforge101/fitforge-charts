@@ -19,6 +19,8 @@ spec:
     path: microservices/auth-service
     helm:
       releaseName: auth-service
+      valueFiles:
+        - ../values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-prod

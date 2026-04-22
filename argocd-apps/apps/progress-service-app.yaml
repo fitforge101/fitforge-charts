@@ -18,6 +18,8 @@ spec:
     path: microservices/progress-service
     helm:
       releaseName: progress-service
+      valueFiles:
+        - ../values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-prod

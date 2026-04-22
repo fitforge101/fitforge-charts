@@ -18,6 +18,8 @@ spec:
     path: microservices/workout-service
     helm:
       releaseName: workout-service
+      valueFiles:
+        - ../values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-prod

@@ -9,8 +9,8 @@ metadata:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: backend
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- if not (index .Values.services .Chart.Name).autoscaling.enabled }}
+  replicas: {{ (index .Values.services .Chart.Name).replicaCount }}
   {{- end }}
   selector:
     matchLabels:
@@ -24,19 +24,19 @@ spec:
     spec:
       containers:
         - name: ai-agent-service
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ (index .Values.services .Chart.Name).image.repository }}:{{ (index .Values.services .Chart.Name).image.tag }}"
+          imagePullPolicy: {{ (index .Values.services .Chart.Name).image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.targetPort }}
+              containerPort: {{ (index .Values.services .Chart.Name).service.targetPort }}
               protocol: TCP
           env:
             - name: PORT
-              value: "{{ .Values.service.port }}"
+              value: "{{ (index .Values.services .Chart.Name).service.port }}"
             - name: AUTH_SERVICE_URL
               value: "http://auth-service.fitforge-prod.svc.cluster.local:5001"
           envFrom:
             - secretRef:
                 name: ai-agent-service-secret
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml (index .Values.services .Chart.Name).resources | nindent 12 }}

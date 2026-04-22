@@ -1,4 +1,4 @@
-{{- if .Values.autoscaling.enabled }}
+{{- if (index .Values.services .Chart.Name).autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -12,19 +12,19 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: progress-service
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  minReplicas: {{ (index .Values.services .Chart.Name).autoscaling.minReplicas }}
+  maxReplicas: {{ (index .Values.services .Chart.Name).autoscaling.maxReplicas }}
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ (index .Values.services .Chart.Name).autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ (index .Values.services .Chart.Name).autoscaling.targetMemoryUtilizationPercentage }}
 {{- end }}

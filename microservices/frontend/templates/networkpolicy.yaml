@@ -1,4 +1,4 @@
-{{- if .Values.networkPolicy.enabled }}
+{{- if (index .Values.services .Chart.Name).networkPolicy.enabled }}
 # =============================================================================
 # NetworkPolicy: frontend
 # =============================================================================

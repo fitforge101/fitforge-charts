@@ -18,6 +18,8 @@ spec:
     path: microservices/user-service
     helm:
       releaseName: user-service
+      valueFiles:
+        - ../values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-prod

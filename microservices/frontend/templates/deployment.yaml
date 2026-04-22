@@ -9,8 +9,8 @@ metadata:
     app.kubernetes.io/part-of: fitforge
     app.kubernetes.io/component: frontend
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- if not (index .Values.services .Chart.Name).autoscaling.enabled }}
+  replicas: {{ (index .Values.services .Chart.Name).replicaCount }}
   {{- end }}
   selector:
     matchLabels:
@@ -24,18 +24,18 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ (index .Values.services .Chart.Name).image.repository }}:{{ (index .Values.services .Chart.Name).image.tag }}"
+          imagePullPolicy: {{ (index .Values.services .Chart.Name).image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.targetPort }}
+              containerPort: {{ (index .Values.services .Chart.Name).service.targetPort }}
               protocol: TCP
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml (index .Values.services .Chart.Name).resources | nindent 12 }}
       volumes:
         - name: nginx-config
           configMap:

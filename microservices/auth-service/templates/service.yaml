@@ -8,11 +8,11 @@ metadata:
     app.kubernetes.io/name: auth-service
     app.kubernetes.io/part-of: fitforge
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ (index .Values.services .Chart.Name).service.type }}
   selector:
     app: auth-service
   ports:
     - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      port: {{ (index .Values.services .Chart.Name).service.port }}
+      targetPort: {{ (index .Values.services .Chart.Name).service.targetPort }}
       protocol: TCP

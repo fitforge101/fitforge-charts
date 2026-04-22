@@ -18,6 +18,8 @@ spec:
     path: microservices/ai-agent-service
     helm:
       releaseName: ai-agent-service
+      valueFiles:
+        - ../values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: fitforge-prod
