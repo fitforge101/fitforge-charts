@@ -29,7 +29,7 @@ spec:
         - name: KEYCLOAK_ADMIN_PASSWORD
           value: admin
         - name: KC_HOSTNAME
-          value: 13.206.123.247
+          value: 3.109.48.66
         - name: KC_HOSTNAME_STRICT
           value: "false"
         - name: KC_HTTP_RELATIVE_PATH
