@@ -1,0 +1,47 @@
+# Keycloak Helm Chart Values
+
+# PostgreSQL Configuration
+postgres:
+  enabled: true
+  image: postgres:15
+  replicas: 1
+  storage:
+    size: 10Gi
+  database: keycloak
+  user: keycloak
+
+# Keycloak Configuration
+keycloak:
+  enabled: true
+  image: quay.io/keycloak/keycloak:24.0
+  replicas: 1
+  
+  # Hostname
+  hostname: keycloak.fitforge360.in
+  
+  # Admin credentials (change in production!)
+  admin:
+    username: admin
+    password: strongpassword
+  
+  # Database password
+  dbPassword: strongdbpassword
+  
+  # Resources
+  resources:
+    requests:
+      cpu: "300m"
+      memory: "512Mi"
+    limits:
+      cpu: "800m"
+      memory: "1Gi"
+  
+  # Gateway configuration
+  proxy: edge
+  
+# Ingress/HTTPRoute Configuration
+gateway:
+  enabled: true
+  name: fitforge-gateway
+  namespace: fitforge-prod
+  hostname: keycloak.fitforge360.in

@@ -1,0 +1,35 @@
+# Headlamp Helm Chart Values
+
+headlamp:
+  enabled: true
+  image: ghcr.io/headlamp-k8s/headlamp:latest
+  replicas: 1
+  namespace: kube-system
+  
+  # OIDC Configuration
+  oidc:
+    issuerUrl: https://keycloak.fitforge360.in/realms/fitforge
+    clientId: kubernetes
+    clientSecret: "" # Add client secret from Keycloak
+  
+  # Resources
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+# Ingress/HTTPRoute Configuration
+gateway:
+  enabled: true
+  name: fitforge-gateway
+  namespace: fitforge-prod
+  hostname: headlamp.fitforge360.in
