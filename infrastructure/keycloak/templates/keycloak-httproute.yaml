@@ -8,12 +8,12 @@ spec:
     - name: fitforge-gateway
       namespace: fitforge-prod
   hostnames:
-    - headlamp.fitforge360.in
+    - keycloak.fitforge360.in
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: /auth
+            value: /
       backendRefs:
         - name: keycloak
           port: 80

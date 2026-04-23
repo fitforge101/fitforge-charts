@@ -20,6 +20,6 @@ spec:
         - containerPort: 80
         env:
         - name: OIDC_ISSUER_URL
-          value: value: https://headlamp.fitforge360.in/auth/realms/fitforge
+          value: https://keycloak.fitforge360.in/realms/fitforge
         - name: OIDC_CLIENT_ID
           value: kubernetes

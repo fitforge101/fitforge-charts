@@ -51,13 +51,10 @@ spec:
               key: KC_DB_PASSWORD
 
         - name: KC_HOSTNAME
-          value: headlamp.fitforge360.in
+          value: keycloak.fitforge360.in
 
         - name: KC_PROXY
           value: edge
-
-        - name: KC_HTTP_RELATIVE_PATH
-          value: /auth
 
         ports:
         - containerPort: 8080
